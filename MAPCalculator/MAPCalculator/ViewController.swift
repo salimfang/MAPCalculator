@@ -6,6 +6,7 @@
 //  Copyright © 2017年 Salim Fang. All rights reserved.
 //
 
+import Darwin
 import UIKit
 
 class ViewController: UIViewController {
@@ -23,15 +24,13 @@ class ViewController: UIViewController {
             if sender.tag != 17 && sender.tag != 18 && sender.tag != 20 && sender.tag != 24
             {
             resultDisplay.text = String(sender.tag-1)
-            displayedNumberDouble = Double(resultDisplay.text!)!
+            
             } else if sender.tag == 17 // e
             {
                 resultDisplay.text = String(M_E)
-                displayedNumberDouble = Double(resultDisplay.text!)!
             } else if sender.tag == 18 // pi
             {
                 resultDisplay.text = String(Double.pi)
-                displayedNumberDouble = Double(resultDisplay.text!)!
             } else if sender.tag == 20 // plus-minus
             {
                 displayedNumberDouble = Double(resultDisplay.text!)! * -1
@@ -39,12 +38,9 @@ class ViewController: UIViewController {
             } else if sender.tag == 24 // decimal mark
             {
                 if resultDisplay.text!.contains("."){
-                    displayedNumberDouble = Double(resultDisplay.text!)!
                 }else if resultDisplay.text == "0"{
-                    displayedNumberDouble = Double(resultDisplay.text!)!
                 }else{
                     resultDisplay.text = resultDisplay.text! + "."
-                    displayedNumberDouble = Double(resultDisplay.text!)!
                 }
             }
             calculationRequested = false
@@ -59,15 +55,12 @@ class ViewController: UIViewController {
             {
             
             resultDisplay.text = resultDisplay.text! + String(sender.tag-1)
-            displayedNumberDouble = Double(resultDisplay.text!)!
             } else if sender.tag == 17 // e
             {
                 resultDisplay.text = String(M_E)
-                displayedNumberDouble = Double(resultDisplay.text!)!
             } else if sender.tag == 18 // pi
             {
                 resultDisplay.text = String(Double.pi)
-                displayedNumberDouble = Double(resultDisplay.text!)!
             } else if sender.tag == 20 // plus-minus
             {
                 displayedNumberDouble = Double(resultDisplay.text!)! * -1
@@ -75,21 +68,19 @@ class ViewController: UIViewController {
             } else if sender.tag == 24 // decimal mark
             {
                 if resultDisplay.text!.contains("."){
-                    displayedNumberDouble = Double(resultDisplay.text!)!
                 }else if resultDisplay.text == "0"{
-                    displayedNumberDouble = Double(resultDisplay.text!)!
                 }else{
-                    resultDisplay.text = resultDisplay.text! + ".0"
-                    displayedNumberDouble = Double(resultDisplay.text!)!
+                    resultDisplay.text = resultDisplay.text! + "."
                 }
             }
             
         }
+        
     }
     
     
     @IBAction func operationRequested(_ sender: UIButton) {
-        if resultDisplay.text !=  "" && sender.tag != 11 && sender.tag != 16{
+        if resultDisplay.text !=  "" && sender.tag != 11 && sender.tag != 16 && sender.tag != 19 && sender.tag != 23{
             
             previousTypedNumber = Double(resultDisplay.text!)!
             
@@ -108,12 +99,21 @@ class ViewController: UIViewController {
             } else if sender.tag == 15 // plus
             {
                 resultDisplay.text = "+"
+            } else if sender.tag == 21 // root
+            {
+                resultDisplay.text = "√"
+            } else if sender.tag == 22 // power
+            {
+                resultDisplay.text = "^"
             }
+            
             
             operationTapped = sender.tag
             calculationRequested = true
         } else if sender.tag == 16 // equal
         {
+            displayedNumberDouble = Double(resultDisplay.text!)!
+            
             if operationTapped == 12 // divide
             {
                 resultDisplay.text = String(previousTypedNumber / displayedNumberDouble)
@@ -126,6 +126,23 @@ class ViewController: UIViewController {
             } else if operationTapped == 15 // plus
             {
                 resultDisplay.text = String(previousTypedNumber + displayedNumberDouble)
+            } else if operationTapped == 21 // root
+            {
+                var result = Double(previousTypedNumber)
+                for _ in 0..<Int(displayedNumberDouble) {
+                    result = sqrt(result)
+                }
+                resultDisplay.text = String(result)
+                
+            }else if operationTapped == 22 // power
+            {
+
+                var result = Double(1)
+                for _ in 0..<Int(displayedNumberDouble) {
+                    result *= Double(previousTypedNumber)
+                }
+                resultDisplay.text = String(result)
+                
             }
         } else if sender.tag == 11 // erase
         {
@@ -133,6 +150,14 @@ class ViewController: UIViewController {
             previousTypedNumber = 0
             displayedNumberDouble = 0
             operationTapped = 0
+        } else if sender.tag == 19 // log10
+        {
+            displayedNumberDouble = Double(resultDisplay.text!)!
+            resultDisplay.text = String(log10(displayedNumberDouble))
+        } else if sender.tag == 23 // percentage
+        {
+            displayedNumberDouble = Double(resultDisplay.text!)!
+            resultDisplay.text = String(displayedNumberDouble * 0.01)
         }
     }
     

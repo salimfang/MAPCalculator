@@ -10,12 +10,16 @@ import Darwin
 import UIKit
 
 class ViewController: UIViewController {
+    
+    let formatter = NumberFormatter()
+    
 
+    
     var displayedNumberDouble:Double = 0
     var previousTypedNumber:Double = 0
     var calculationRequested = false
     var operationTapped:Int = 0
-    
+       
     @IBOutlet weak var resultDisplay: UILabel!
     
     @IBAction func numberTyped(_ sender: UIButton) {
@@ -144,6 +148,15 @@ class ViewController: UIViewController {
                 resultDisplay.text = String(result)
                 
             }
+            
+            func checkNumber(labelText: String) -> String {
+                var stringOfNumber: NSNumber
+                stringOfNumber = formatter.number(from: labelText)!
+                return String(describing: stringOfNumber)
+            }
+            
+            resultDisplay.text = checkNumber(labelText: resultDisplay.text!)
+            
         } else if sender.tag == 11 // erase
         {
             resultDisplay.text = "0"
